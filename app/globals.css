@@ -3,6 +3,22 @@
 @tailwind utilities;
 
 :root {
+  --background: #fff;
+  --foreground: #121212;
+  --primary: #fff;
+  --secondary: #5502a6;
+  --focus: #00bcd4;
+}
+
+.dark {
+  --background: #121212;
+  --foreground: #fff;
+  --primary: #121212;
+  --secondary: #bb86fc;
+  --focus: #03dac5;
+}
+
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -24,4 +40,4 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-}
+} */
