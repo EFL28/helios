@@ -1,7 +1,7 @@
 "use client";
+import Footer from "@/ui/footer";
+import Header from "@/ui/header";
 import React from "react";
-import Header from "./ui/header";
-import Footer from "./ui/footer";
 // import styles from "@/src/app/styles/layout.module.css";
 
 const LayoutBody: React.FC<{ children: React.ReactNode }> = ({ children }) => {

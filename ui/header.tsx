@@ -1,4 +1,5 @@
 "use client";
+import QuinisindicLogo from "@/app/icons/QuinisindicLogo";
 import {
   Navbar,
   NavbarBrand,
@@ -15,10 +16,16 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
+import Link from "next/link";
 import React, { useEffect } from "react";
-import QuinisindicLogo from "../icons/QuinisindicLogo";
+
 export default function Header() {
-  const menuItems = ["Predicciones", "Resultados", "Quiniela"];
+  const menuItems = [
+    { name: "Predicciones", path: "/predictions" },
+    { name: "Resultados", path: "/results" },
+    { name: "Quiniela", path: "/quiniela" },
+  ];
+
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isSticky, setIsSticky] = React.useState<"sticky" | "static">("sticky");
   // const [shouldHide, setShouldHide] = useState(false);
@@ -39,12 +46,13 @@ export default function Header() {
       maxWidth="full"
       position={isSticky}
       isBlurred={false}
+      className="mb-4"
       // shouldHideOnScroll={shouldHide}
     >
       {/* Toogle icon */}
       <NavbarMenuToggle
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        className="sm:hidden"
+        className="sm:hidden text-foreground"
       />
 
       {/* Logo y marca */}
@@ -54,18 +62,20 @@ export default function Header() {
         className="flex justify-center sm:justify-between w-full"
       >
         <NavbarBrand className="flex items-center justify-center w-full sm:justify-start sm:w-auto">
-          <QuinisindicLogo />
-          <span className="text-lg font-bold hidden sm:inline">
+          <Link href="/">
+            <QuinisindicLogo />
+          </Link>
+          <span className="text-lg font-bold hidden sm:inline text-foreground">
             QuiniSindic
           </span>
         </NavbarBrand>
       </NavbarContent>
 
       {/* Menu en mobile*/}
-      <NavbarMenu>
+      <NavbarMenu className="flex flex-col gap-4 items-center">
         {menuItems.map((item) => (
-          <NavbarMenuItem key={item} className="flex justify-center">
-            {item}
+          <NavbarMenuItem key={item.path}>
+            <Link href={item.path}>{item.name}</Link>
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
@@ -73,9 +83,14 @@ export default function Header() {
       {/* Avatar */}
       <NavbarContent as="div" justify="end">
         {/* Menu en desktop*/}
-        <NavbarContent className="hidden sm:flex gap-4" justify="end">
+        <NavbarContent
+          className="hidden sm:flex gap-4 text-foreground"
+          justify="end"
+        >
           {menuItems.map((item) => (
-            <NavbarItem key={item}>{item}</NavbarItem>
+            <NavbarItem key={item.path}>
+              <Link href={item.path}>{item.name}</Link>
+            </NavbarItem>
           ))}
         </NavbarContent>
         <Dropdown placement="bottom-end">

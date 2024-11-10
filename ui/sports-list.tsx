@@ -1,5 +1,5 @@
+import Events from "@/ui/events";
 import React from "react";
-import Events from "./events";
 
 const sports = [
   {
@@ -45,15 +45,19 @@ export default function SportsList() {
             key={sport.name}
             onClick={() => toggleSport(sport.name)}
             className={`px-4 py-2 rounded-lg whitespace-nowrap transition-colors duration-300 
-                ${
-                  selectedSport === sport.name
-                    ? "bg-focus text-secondary"
-                    : "bg-secondary text-white"
-                }`}
+              ${
+                selectedSport === sport.name
+                  ? "bg-focus text-secondary"
+                  : "bg-secondary text-white"
+              }`}
           >
             {sport.name}
           </button>
         ))}
+      </div>
+
+      <div className="sm:hidden">
+        <Events />
       </div>
 
       {/* Mostrar ligas del deporte seleccionado en pantallas pequeñas */}
