@@ -1,21 +1,12 @@
+"use client";
+
 import { NextUIProvider } from "@nextui-org/react";
 import type { Metadata } from "next";
-// import localFont from "next/font/local";
+import { useEffect, useState } from "react";
 import "./globals.css";
 import LayoutBody from "./layout-body";
 
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
-
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: "Helios",
   description: "Project Helios",
 };
@@ -25,8 +16,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Detectar la preferencia del sistema
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDarkMode(mediaQuery.matches);
+
+    // Escuchar cambios en la preferencia del sistema
+    const handler = (e: MediaQueryListEvent) => setIsDarkMode(e.matches);
+    mediaQuery.addEventListener("change", handler);
+
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+
+  useEffect(() => {
+    // Aplicar el tema al elemento html
+    document.documentElement.classList.toggle("dark", isDarkMode);
+  }, [isDarkMode]);
+
   return (
-    <html lang="en">
+    <html lang="en" className={isDarkMode ? "dark" : ""}>
       <body>
         <NextUIProvider>
           <LayoutBody>{children}</LayoutBody>

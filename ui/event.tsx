@@ -40,7 +40,7 @@ export default function Event() {
         events.map((event, index) => (
           <div
             key={index}
-            className="bg-white p-3 md:p-4 rounded-lg shadow-md mb-4 sm:hover:shadow-lg sm:hover:scale-[1.02] transition-all duration-200 cursor-pointer"
+            className="bg-white dark:bg-[#272727] p-3 md:p-4 rounded-lg shadow-md mb-4 sm:hover:shadow-lg sm:hover:scale-[1.02] transition-all duration-200 cursor-pointer"
           >
             {/* Vista móvil: flex column */}
             <div className="flex flex-col sm:hidden gap-2">
@@ -95,7 +95,7 @@ export default function Event() {
               </span>
             </div>
 
-            <p className="text-gray-500 text-sm md:text-base text-center mt-4">
+            <p className="text-gray-500 dark: text-white text-sm md:text-base text-center mt-4">
               {new Date(event.utcDate)
                 .toLocaleDateString("es-ES", {
                   weekday: "long",
@@ -114,7 +114,7 @@ export default function Event() {
           </div>
         ))
       ) : (
-        <p className="text-center text-gray-500">
+        <p className="text-center text-secondary">
           No hay partidos esta semana.
         </p>
       )}
