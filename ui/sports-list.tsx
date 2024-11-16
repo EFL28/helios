@@ -56,10 +56,6 @@ export default function SportsList() {
         ))}
       </div>
 
-      <div className="sm:hidden">
-        <Events />
-      </div>
-
       {/* Mostrar ligas del deporte seleccionado en pantallas pequeñas */}
       {selectedSport && (
         <div className="sm:hidden mt-2 text-center bg-secondary text-white rounded-lg">
@@ -67,13 +63,17 @@ export default function SportsList() {
             {sports
               .find((sport) => sport.name === selectedSport)
               ?.leagues.map((league) => (
-                <li className="p-1" key={league}>
+                <li className="p-2" key={league}>
                   {league}
                 </li>
               ))}
           </ul>
         </div>
       )}
+
+      <div className="sm:hidden">
+        <Events />
+      </div>
 
       {/* Pantallas medianas y grandes */}
       <div className="hidden sm:flex">
