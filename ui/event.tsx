@@ -109,7 +109,8 @@ export default function Event() {
               {new Date(event.utcDate).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
-              })}h
+              })}
+              h
             </p>
           </div>
         ))
