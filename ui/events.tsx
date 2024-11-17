@@ -5,7 +5,7 @@ export default function Events() {
   return (
     <>
       {/* Pantallas medianas y grandes */}
-      <div className="hidden sm:flex container mx-auto px-4 gap-4">
+      <div className="hidden sm:flex container px-4 gap-4">
         <main className="flex-1">
           <h1 className="text-2xl font-bold text-center bg-secondary text-white rounded-lg p-2 mb-4">
             Eventos

@@ -21,7 +21,7 @@ const sports = [
   },
   {
     name: "Motor",
-    leagues: ["MotoGP", "Fórmula 1"],
+    leagues: ["Fórmula 1", "MotoGP"],
   },
   {
     name: "Ciclismo",
@@ -58,16 +58,14 @@ export default function SportsList() {
 
       {/* Mostrar ligas del deporte seleccionado en pantallas pequeñas */}
       {selectedSport && (
-        <div className="sm:hidden mt-2 text-center bg-secondary text-white rounded-lg">
-          <ul>
-            {sports
-              .find((sport) => sport.name === selectedSport)
-              ?.leagues.map((league) => (
-                <li className="p-2" key={league}>
-                  {league}
-                </li>
-              ))}
-          </ul>
+        <div className="sm:hidden mt-2 text-center bg-secondary text-white rounded-lg overflow-x-auto flex space-x-4 scrollbar-hide">
+          {sports
+            .find((sport) => sport.name === selectedSport)
+            ?.leagues.map((league) => (
+              <button key={league} className="px-4 py-2 whitespace-nowrap">
+                {league}
+              </button>
+            ))}
         </div>
       )}
 
