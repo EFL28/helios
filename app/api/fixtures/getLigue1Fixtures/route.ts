@@ -2,7 +2,7 @@ import { Match } from "@/types/LALIGA_matches.types";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const apiUrl = `${process.env.FOOTBALL_DATA_ORG_URL}/competitions/PL/matches`;
+  const apiUrl = `${process.env.FOOTBALL_DATA_ORG_URL}/competitions/FL1/matches`;
 
   const options = {
     headers: {

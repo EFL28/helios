@@ -46,7 +46,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error en la solicitud:", error);
     return NextResponse.json(
-      { error: "Error al conectar con API-Football" },
+      { error: "Error al conectar con football-data.org" },
       { status: 500 }
     );
   }
