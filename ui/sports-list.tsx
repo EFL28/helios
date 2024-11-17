@@ -31,10 +31,20 @@ const sports = [
 
 export default function SportsList() {
   const [selectedSport, setSelectedSport] = React.useState<string | null>(null);
+  const [selectedLeague, setSelectedLeague] = React.useState<string | null>(
+    null
+  );
 
   const toggleSport = (sport: string) => {
     setSelectedSport(selectedSport === sport ? null : sport);
+    setSelectedLeague(null);
   };
+
+  const handleLeagueSelect = (league: string) => {
+    setSelectedLeague(selectedLeague === league ? null : league);
+  };
+
+  // console.log(selectedSport, selectedLeague);
 
   return (
     <div className="mx-4 mt-4 sm:mx-8 md:mx-8 lg:mx-12 xl:mx-12">
@@ -62,7 +72,14 @@ export default function SportsList() {
           {sports
             .find((sport) => sport.name === selectedSport)
             ?.leagues.map((league) => (
-              <button key={league} className="px-4 py-2 whitespace-nowrap">
+              <button
+                key={league}
+                onClick={() => handleLeagueSelect(league)}
+                className={`px-4 py-2 whitespace-nowrap transition-colors duration-300 
+                  ${
+                    selectedLeague === league ? "bg-focus text-secondary" : ""
+                  }`}
+              >
                 {league}
               </button>
             ))}
@@ -70,7 +87,7 @@ export default function SportsList() {
       )}
 
       <div className="sm:hidden">
-        <Events />
+        <Events selectedLeague={selectedLeague} />
       </div>
 
       {/* Pantallas medianas y grandes */}
@@ -90,7 +107,7 @@ export default function SportsList() {
             </div>
           ))}
         </div>
-        <Events />
+        <Events selectedLeague={null} />
       </div>
     </div>
   );

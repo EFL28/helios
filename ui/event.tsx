@@ -1,30 +1,68 @@
-import { Match } from "@/types/LALIGA_matches.types";
+import { Match } from "@/types/matches.types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import EventSkeleton from "./skeletons/EventSkeleton";
 
-export default function Event() {
+interface EventProps {
+  selectedLeague: string | null;
+}
+
+export default function Event({ selectedLeague }: EventProps) {
+  console.log("selectedLeague", selectedLeague);
   const [events, setEvents] = useState<Match[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const res = await fetch("/api/fixtures/getLaLigaFixtures");
+        let endpoint = "/api/fixtures/getTodayFixtures"; // Por defecto hoy
+        switch (selectedLeague) {
+          case "La Liga":
+            endpoint = "/api/fixtures/footballFixtures/getLaLigaFixtures";
+            break;
+          case "Premier League":
+            endpoint =
+              "/api/fixtures/footballFixtures/getPremierLeagueFixtures";
+            break;
+          case "Bundesliga":
+            endpoint = "/api/fixtures/footballFixtures/getBundesligaFixtures";
+            break;
+          case "Serie A":
+            endpoint = "/api/fixtures/footballFixtures/getSerieAFixtures";
+            break;
+          case "Ligue 1":
+            endpoint = "/api/fixtures/footballFixtures/getLigue1Fixtures";
+            break;
+          case null:
+            endpoint = "/api/fixtures/getTodayFixtures";
+            break;
+        }
+
+        // console.log("endpoint", endpoint);
+
+        const res = await fetch(endpoint);
         const data = await res.json();
-        if (data && Array.isArray(data)) {
+        console.log("data", data);
+
+        if (data && data.matches) {
+          setEvents(data.matches);
+        } else if (data && Array.isArray(data)) {
           setEvents(data);
         } else {
           console.error("Error al cargar los eventos", data);
+          setEvents([]);
         }
       } catch (error) {
         console.error("Error al cargar los eventos", error);
+        setEvents([]);
       } finally {
         setIsLoading(false);
       }
     };
+
     fetchData();
-  }, []);
+  }, [selectedLeague]);
 
   if (isLoading) {
     return <EventSkeleton />;
@@ -33,7 +71,7 @@ export default function Event() {
   return (
     <section className="mb-4 max-w-full">
       <h2 className="text-xl md:text-2xl font-semibold mb-4">
-        Partidos de esta semana
+        Eventos de esta semana
       </h2>
 
       {events.length > 0 ? (
@@ -95,6 +133,7 @@ export default function Event() {
               </span>
             </div>
 
+            {/* Tag con el dia y la hora */}
             <p className="text-gray-500 dark:text-white text-sm md:text-base text-center mt-4">
               {new Date(event.utcDate)
                 .toLocaleDateString("es-ES", {

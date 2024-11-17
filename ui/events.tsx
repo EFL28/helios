@@ -1,7 +1,11 @@
 import Results from "@/app/results/page";
 import Event from "@/ui/event";
 
-export default function Events() {
+interface EventsProps {
+  selectedLeague: string | null;
+}
+
+export default function Events({ selectedLeague }: EventsProps) {
   return (
     <>
       {/* Pantallas medianas y grandes */}
@@ -10,7 +14,7 @@ export default function Events() {
           <h1 className="text-2xl font-bold text-center bg-secondary text-white rounded-lg p-2 mb-4">
             Eventos
           </h1>
-          <Event />
+          <Event selectedLeague={selectedLeague} />
         </main>
         <aside className="w-1/3">
           <Results />
@@ -22,7 +26,7 @@ export default function Events() {
         <h1 className="text-2xl font-bold text-center mt-2 bg-secondary text-white rounded-lg p-2 mb-4">
           Eventos
         </h1>
-        <Event />
+        <Event selectedLeague={selectedLeague} />
         <aside className="mt-4">
           <Results />
         </aside>

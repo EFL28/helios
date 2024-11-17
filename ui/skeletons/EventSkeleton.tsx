@@ -2,7 +2,7 @@ export default function EventSkeleton() {
   return (
     <section className="mb-4 max-w-full">
       <h2 className="text-xl md:text-2xl font-semibold mb-4">
-        Partidos de esta semana
+        Eventos de esta semana
       </h2>
       {[...Array(4)].map((_, index) => (
         <div
