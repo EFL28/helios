@@ -9,7 +9,7 @@ interface EventProps {
   selectedLeague: string | null;
 }
 
-function formatLocalDateTime(dateStr: string, timeStr: string) {
+function formatLocalDateTime(dateStr: string, timeStr: string | undefined): string {
   // Crear fecha UTC
   const utcDate = new Date(`${dateStr}T${timeStr}`);
   
@@ -35,6 +35,10 @@ export default function Event({ selectedLeague }: EventProps) {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
+      // Limpiar los estados al cambiar de liga
+      setF1Event(null);
+      setEvents([]);
+      
       try {
         let endpoint = "/api/fixtures/getTodayFixtures"; // Por defecto hoy
         switch (selectedLeague) {
@@ -42,8 +46,7 @@ export default function Event({ selectedLeague }: EventProps) {
             endpoint = "/api/fixtures/footballFixtures/getLaLigaFixtures";
             break;
           case "Premier League":
-            endpoint =
-              "/api/fixtures/footballFixtures/getPremierLeagueFixtures";
+            endpoint = "/api/fixtures/footballFixtures/getPremierLeagueFixtures";
             break;
           case "Bundesliga":
             endpoint = "/api/fixtures/footballFixtures/getBundesligaFixtures";
@@ -81,6 +84,7 @@ export default function Event({ selectedLeague }: EventProps) {
       } catch (error) {
         console.error("Error al cargar los eventos", error);
         setEvents([]);
+        setF1Event(null);
       } finally {
         setIsLoading(false);
       }
