@@ -95,7 +95,7 @@ export default function Event() {
               </span>
             </div>
 
-            <p className="text-gray-500 dark: text-white text-sm md:text-base text-center mt-4">
+            <p className="text-gray-500 dark:text-white text-sm md:text-base text-center mt-4">
               {new Date(event.utcDate)
                 .toLocaleDateString("es-ES", {
                   weekday: "long",
