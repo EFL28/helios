@@ -1,3 +1,4 @@
+import { IResponse, TodayMatchesResponse } from "@/types/api_response_types";
 import { Match } from "@/types/matches.types";
 import { NextResponse } from "next/server";
 
@@ -33,7 +34,9 @@ async function getLeagueMatches(leagueId: string): Promise<Match[]> {
   }
 }
 
-export async function GET() {
+export async function GET(): Promise<
+  NextResponse<IResponse<TodayMatchesResponse>>
+> {
   try {
     // Obtener todos los partidos de todas las ligas
     const allLeaguesPromises = LEAGUES.map((league) =>
@@ -57,8 +60,14 @@ export async function GET() {
 
     if (futureMatches.length === 0) {
       return NextResponse.json({
-        message: "No se encontraron partidos futuros",
-        matches: [],
+        data: {
+          type: "today_matches",
+          data: {
+            date: today.toISOString().split("T")[0],
+            totalMatches: 0,
+            matches: [],
+          },
+        },
       });
     }
 
@@ -85,7 +94,7 @@ export async function GET() {
     );
 
     // Agregar la liga a cada partido
-    const matchesWithLeague = sortedMatches.map((match) => {
+    const matchesWithLeague: Match[] = sortedMatches.map((match) => {
       const league = LEAGUES.find((l) => match.competition.code === l.id);
       return {
         ...match,
@@ -93,18 +102,21 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({
-      date: nearestDate.toISOString().split("T")[0],
-      totalMatches: matchesWithLeague.length,
-      matches: matchesWithLeague,
-    });
+    // Respuesta tipada correctamente como TodayMatchesResponse
+    const response: TodayMatchesResponse = {
+      type: "today_matches",
+      data: {
+        date: nearestDate.toISOString().split("T")[0],
+        totalMatches: matchesWithLeague.length,
+        matches: matchesWithLeague,
+      },
+    };
+
+    return NextResponse.json({ data: response });
   } catch (error) {
     console.error("Error general:", error);
     return NextResponse.json(
-      {
-        error: "Error al obtener los partidos",
-        details: error instanceof Error ? error.message : "Unknown error",
-      },
+      { error: "Error al conectar con football-data.org" },
       { status: 500 }
     );
   }

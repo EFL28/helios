@@ -1,7 +1,10 @@
+import { IResponse, LeagueMatchesResponse } from "@/types/api_response_types";
 import { Match } from "@/types/matches.types";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(): Promise<
+  NextResponse<IResponse<LeagueMatchesResponse>>
+> {
   const apiUrl = `${process.env.FOOTBALL_DATA_ORG_URL}/competitions/PD/matches`;
 
   const options = {
@@ -42,7 +45,14 @@ export async function GET() {
       return matchDate >= startDate && matchDate <= endDate;
     });
 
-    return NextResponse.json(currentWeekFixtures);
+    const response: LeagueMatchesResponse = {
+      type: "league_matches",
+      data: {
+        matches: currentWeekFixtures,
+      },
+    };
+
+    return NextResponse.json({ data: response });
   } catch (error) {
     console.error("Error en la solicitud:", error);
     return NextResponse.json(

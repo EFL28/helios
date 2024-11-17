@@ -101,7 +101,15 @@ export default function SportsList() {
               <h3 className="text-lg font-semibold">{sport.name}</h3>
               <ul>
                 {sport.leagues.map((league) => (
-                  <li key={league}>{league}</li>
+                  <li
+                    key={league}
+                    onClick={() => handleLeagueSelect(league)}
+                    className={`cursor-pointer hover:text-focus transition-colors duration-300 ${
+                      selectedLeague === league ? "text-focus" : ""
+                    }`}
+                  >
+                    {league}
+                  </li>
                 ))}
               </ul>
             </div>

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import "./globals.css";
 import LayoutBody from "./layout-body";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const metadata: Metadata = {
   title: "Helios",
   description: "Project Helios",
