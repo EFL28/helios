@@ -9,17 +9,15 @@ export default function F1Prediction() {
   const params = useParams();
   const [selectedDrivers, setSelectedDrivers] = useState<number[]>([]);
   const [drivers, setDrivers] = useState([] as F1DriversData[]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchDrivers = async () => {
-      setIsLoading(true);
       try {
         const res = await fetch("/api/f1/getF1Drivers");
         const data = await res.json();
-        const d = data.data;
-
-        setDrivers(d);
+        setDrivers(data.data);
       } catch (error) {
         console.error("Error al obtener los pilotos:", error);
         return {
@@ -39,73 +37,84 @@ export default function F1Prediction() {
     "sprint-race": "Carrera Sprint",
   };
 
-  const handleDriverSelect = (driverId: number) => {
-    if (selectedDrivers.includes(driverId)) {
-      setSelectedDrivers(selectedDrivers.filter((id) => id !== driverId));
-    } else if (selectedDrivers.length < 5) {
-      setSelectedDrivers([...selectedDrivers, driverId]);
-    }
+  const handlePositionChange = (position: number, driverId: number) => {
+    setSelectedDrivers((prev) => {
+      const newSelection = [...prev];
+      // Si el piloto ya está seleccionado en otra posición, lo removemos
+      const existingIndex = newSelection.indexOf(driverId);
+      if (existingIndex !== -1) {
+        newSelection[existingIndex] = 0;
+      }
+      // Asignamos el piloto a la nueva posición
+      newSelection[position - 1] = driverId;
+      return newSelection;
+    });
   };
 
   const handleSubmit = async () => {
-    if (selectedDrivers.length === 5) {
-      // Aquí iría la lógica para enviar las predicciones
+    if (selectedDrivers.filter(Boolean).length === 5) {
       console.log("Predicciones:", selectedDrivers);
     }
   };
 
-  console.log("Drivers:", drivers);
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">
+    <div className="container mx-auto p-4 max-w-2xl">
+      <h1 className="text-2xl font-bold mb-6">
         Predicción para la{" "}
         {sessionTypeNames[
           params.sessionType as keyof typeof sessionTypeNames
         ].toLowerCase()}
       </h1>
 
-      <p className="mb-4">Selecciona el Top 5 en orden:</p>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {drivers.map((driver, index) => (
-          <div
-            key={index}
-            onClick={() => handleDriverSelect(driver.driver_number)}
-            className={`p-4 border rounded cursor-pointer ${
-              selectedDrivers.includes(driver.driver_number)
-                ? "bg-primary text-white"
-                : "hover:bg-gray-100"
-            }`}
-          >
-            <div className="flex items-center gap-4">
-              <Image
-                src={driver.headshot_url}
-                alt={`${driver.first_name} ${driver.last_name}`}
-                width={60}
-                height={60}
-                unoptimized
-              />
-              <div>
-                <p className="font-medium">
-                  {driver.first_name} {driver.last_name}
-                </p>
-                <p className="text-sm">{driver.team_name}</p>
-                {selectedDrivers.includes(driver.driver_number) && (
-                  <span className="text-sm">
-                    Posición: {selectedDrivers.indexOf(index) + 1}
-                  </span>
-                )}
+      <div className="space-y-4">
+        {[1, 2, 3, 4, 5].map((position) => (
+          <div key={position} className="flex items-center gap-4">
+            <div className="font-bold text-xl w-8">#{position}</div>
+            {selectedDrivers[position - 1] && (
+              <div className="w-12 h-12 relative">
+                <Image
+                  src={
+                    drivers.find(
+                      (d) => d.driver_number === selectedDrivers[position - 1]
+                    )?.headshot_url || ""
+                  }
+                  alt="Driver"
+                  width={48}
+                  height={48}
+                  className="rounded-full object-cover"
+                />
               </div>
-            </div>
+            )}
+            <select
+              value={selectedDrivers[position - 1] || ""}
+              onChange={(e) =>
+                handlePositionChange(position, Number(e.target.value))
+              }
+              className="flex-1 p-2 border rounded-lg bg-inherit"
+            >
+              <option value="">Selecciona un piloto</option>
+              {drivers.map((driver) => (
+                <option
+                  key={driver.driver_number}
+                  value={driver.driver_number}
+                  disabled={
+                    selectedDrivers.includes(driver.driver_number) &&
+                    selectedDrivers[position - 1] !== driver.driver_number
+                  }
+                  className="text-black"
+                >
+                  {driver.first_name} {driver.last_name} - {driver.team_name}
+                </option>
+              ))}
+            </select>
           </div>
         ))}
       </div>
 
       <button
         onClick={handleSubmit}
-        disabled={selectedDrivers.length !== 5}
-        className="mt-4 px-4 py-2 bg-primary text-white rounded disabled:opacity-50"
+        disabled={selectedDrivers.filter(Boolean).length !== 5}
+        className="mt-6 px-4 py-2 bg-secondary text-white rounded-lg disabled:opacity-50 w-full"
       >
         Enviar predicción
       </button>
