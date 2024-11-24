@@ -2,6 +2,7 @@ import { EventResponse, IResponse } from "@/types/api_response_types";
 import { F1RaceData } from "@/types/f1.types";
 import { Match } from "@/types/matches.types";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import EventSkeleton from "./skeletons/EventSkeleton";
 
@@ -9,10 +10,13 @@ interface EventProps {
   selectedLeague: string | null;
 }
 
-function formatLocalDateTime(dateStr: string, timeStr: string | undefined): string {
+function formatLocalDateTime(
+  dateStr: string,
+  timeStr: string | undefined
+): string {
   // Crear fecha UTC
   const utcDate = new Date(`${dateStr}T${timeStr}`);
-  
+
   // Convertir a timestamp local
   const localDate = new Date(utcDate.getTime());
 
@@ -22,7 +26,7 @@ function formatLocalDateTime(dateStr: string, timeStr: string | undefined): stri
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
-    timeZone: 'UTC'
+    timeZone: "UTC",
   });
 }
 
@@ -31,6 +35,7 @@ export default function Event({ selectedLeague }: EventProps) {
   const [events, setEvents] = useState<Match[]>([]);
   const [f1Event, setF1Event] = useState<F1RaceData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +43,7 @@ export default function Event({ selectedLeague }: EventProps) {
       // Limpiar los estados al cambiar de liga
       setF1Event(null);
       setEvents([]);
-      
+
       try {
         let endpoint = "/api/fixtures/getTodayFixtures"; // Por defecto hoy
         switch (selectedLeague) {
@@ -46,7 +51,8 @@ export default function Event({ selectedLeague }: EventProps) {
             endpoint = "/api/fixtures/footballFixtures/getLaLigaFixtures";
             break;
           case "Premier League":
-            endpoint = "/api/fixtures/footballFixtures/getPremierLeagueFixtures";
+            endpoint =
+              "/api/fixtures/footballFixtures/getPremierLeagueFixtures";
             break;
           case "Bundesliga":
             endpoint = "/api/fixtures/footballFixtures/getBundesligaFixtures";
@@ -80,11 +86,9 @@ export default function Event({ selectedLeague }: EventProps) {
             setF1Event(info.data);
             break;
         }
-
       } catch (error) {
         console.error("Error al cargar los eventos", error);
         setEvents([]);
-        setF1Event(null);
       } finally {
         setIsLoading(false);
       }
@@ -92,6 +96,23 @@ export default function Event({ selectedLeague }: EventProps) {
 
     fetchData();
   }, [selectedLeague]);
+
+  const handleSessionClick = (sessionType: string, date: string) => {
+    if (!date) {
+      return;
+    }
+
+    // Solo permitir predicciones si la fecha no ha pasado
+    const sessionDate = new Date(`${date}`);
+    const now = new Date();
+
+    if (sessionDate > now) {
+      router.push(`/predictions/f1/${sessionType}`);
+    } else {
+      // Opcional: Mostrar algún mensaje de que la sesión ya pasó
+      console.log("Esta sesión ya ha terminado");
+    }
+  };
 
   if (isLoading) {
     return <EventSkeleton />;
@@ -126,6 +147,7 @@ export default function Event({ selectedLeague }: EventProps) {
                 {f1Event.circuitName}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
+                {/* Libres 1 */}
                 <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
                   <p className="font-medium">Práctica 1</p>
                   <p>
@@ -133,24 +155,50 @@ export default function Event({ selectedLeague }: EventProps) {
                   </p>
                 </div>
 
+                {/* Sprint Qualifying */}
                 {f1Event.sprintGP && f1Event.sprintQualifyingDate && (
-                  <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                  <div
+                    className="bg-gray-100 dark:bg-gray-800 p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() =>
+                      f1Event.sprintQualifyingDate &&
+                      handleSessionClick(
+                        "sprint-qualifying",
+                        f1Event.sprintQualifyingDate
+                      )
+                    }
+                  >
                     <p className="font-medium">Clasificación Sprint</p>
                     <p>
-                      {formatLocalDateTime(f1Event.sprintQualifyingDate, f1Event.sprintQualifyingTime)}h
+                      {formatLocalDateTime(
+                        f1Event.sprintQualifyingDate,
+                        f1Event.sprintQualifyingTime
+                      )}
+                      h
                     </p>
                   </div>
                 )}
 
+                {/* Sprint Race */}
                 {f1Event.sprintGP && f1Event.sprintRaceDate && (
-                  <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                  <div
+                    className="bg-gray-100 dark:bg-gray-800 p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() =>
+                      f1Event.sprintRaceDate &&
+                      handleSessionClick("sprint-race", f1Event.sprintRaceDate)
+                    }
+                  >
                     <p className="font-medium">Carrera Sprint</p>
                     <p>
-                      {formatLocalDateTime(f1Event.sprintRaceDate, f1Event.sprintRaceTime)}h
+                      {formatLocalDateTime(
+                        f1Event.sprintRaceDate,
+                        f1Event.sprintRaceTime
+                      )}
+                      h
                     </p>
                   </div>
                 )}
 
+                {/* Libres 2 */}
                 {!f1Event.sprintGP && f1Event.fp2Date && (
                   <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
                     <p className="font-medium">Práctica 2</p>
@@ -160,6 +208,7 @@ export default function Event({ selectedLeague }: EventProps) {
                   </div>
                 )}
 
+                {/* Libres 3 */}
                 {!f1Event.sprintGP && f1Event.fp3Date && (
                   <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
                     <p className="font-medium">Práctica 3</p>
@@ -169,14 +218,32 @@ export default function Event({ selectedLeague }: EventProps) {
                   </div>
                 )}
 
-                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                {/* Clasificación */}
+                <div
+                  className="bg-gray-100 dark:bg-gray-800 p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  onClick={() =>
+                    f1Event.qualifyingDate &&
+                    handleSessionClick("qualifying", f1Event.qualifyingDate)
+                  }
+                >
                   <p className="font-medium">Clasificación</p>
                   <p>
-                    {formatLocalDateTime(f1Event.qualifyingDate, f1Event.qualifyingTime)}h
+                    {formatLocalDateTime(
+                      f1Event.qualifyingDate,
+                      f1Event.qualifyingTime
+                    )}
+                    h
                   </p>
                 </div>
 
-                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded">
+                {/* Carrera */}
+                <div
+                  className="bg-gray-100 dark:bg-gray-800 p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  onClick={() =>
+                    f1Event.raceDate &&
+                    handleSessionClick("race", f1Event.raceDate)
+                  }
+                >
                   <p className="font-medium">Carrera</p>
                   <p>
                     {formatLocalDateTime(f1Event.raceDate, f1Event.raceTime)}h

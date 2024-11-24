@@ -46,7 +46,7 @@ export interface F1RaceData {
   raceDate: string;
   raceTime: string;
 
-  sprintGP?: boolean
+  sprintGP?: boolean;
 
   sprintQualifyingDate?: string;
   sprintQualifyingTime?: string;
@@ -67,7 +67,27 @@ export interface F1RaceData {
   qualifyingTime: string;
 }
 
+export interface F1DriversData {
+  broadcast_name: string;
+  country_code: string;
+  driver_number: number;
+  first_name: string;
+  full_name: string;
+  headshot_url: string;
+  last_name: string;
+  meeting_key: number;
+  name_acronym: string;
+  session_key: number;
+  team_colour: string;
+  team_name: string;
+}
+
 export interface F1GPsResponse<T> {
+  error?: string;
+  data?: T;
+}
+
+export interface F1DriversResponse<T> {
   error?: string;
   data?: T;
 }
