@@ -31,10 +31,10 @@ export default function F1Prediction() {
   }, []);
 
   const sessionTypeNames = {
-    qualifying: "Clasificación",
-    race: "Carrera",
-    "sprint-qualifying": "Clasificación Sprint",
-    "sprint-race": "Carrera Sprint",
+    qualifying: "clasificación",
+    race: "carrera",
+    "sprint-qualifying": "clasificación al sprint",
+    "sprint-race": "carrera al sprint",
   };
 
   const handlePositionChange = (position: number, driverId: number) => {
@@ -61,9 +61,7 @@ export default function F1Prediction() {
     <div className="container mx-auto p-4 max-w-2xl">
       <h1 className="text-2xl font-bold mb-6">
         Predicción para la{" "}
-        {sessionTypeNames[
-          params.sessionType as keyof typeof sessionTypeNames
-        ].toLowerCase()}
+        {sessionTypeNames[params.sessionType as keyof typeof sessionTypeNames]}
       </h1>
 
       <div className="space-y-4">

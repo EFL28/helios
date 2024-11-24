@@ -115,7 +115,7 @@ export default function SportsList() {
             </div>
           ))}
         </div>
-        <Events selectedLeague={null} />
+        <Events selectedLeague={selectedLeague} />
       </div>
     </div>
   );
