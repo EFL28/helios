@@ -120,11 +120,11 @@ export default function Event({ selectedLeague }: EventProps) {
 
   return (
     <section className="mb-4 max-w-full">
-      <h2 className="text-xl md:text-2xl font-semibold mb-4">
+      {/* <h2 className="text-xl md:text-2xl font-semibold mb-4">
         {selectedLeague
           ? `Eventos de ${selectedLeague}`
           : "Eventos de esta semana"}
-      </h2>
+      </h2> */}
 
       {f1Event ? (
         <div className="bg-white dark:bg-[#272727] p-3 md:p-4 rounded-lg shadow-md mb-4 sm:hover:shadow-lg sm:hover:scale-[1.02] transition-all duration-200 cursor-pointer">

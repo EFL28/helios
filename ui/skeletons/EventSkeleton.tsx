@@ -1,9 +1,9 @@
 export default function EventSkeleton() {
   return (
     <section className="mb-4 max-w-full">
-      <h2 className="text-xl md:text-2xl font-semibold mb-4">
+      {/* <h2 className="text-xl md:text-2xl font-semibold mb-4">
         Eventos de esta semana
-      </h2>
+      </h2> */}
       {[...Array(4)].map((_, index) => (
         <div
           key={index}
@@ -38,4 +38,4 @@ export default function EventSkeleton() {
       ))}
     </section>
   );
-} 
+}

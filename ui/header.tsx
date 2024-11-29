@@ -1,4 +1,5 @@
 "use client";
+
 import QuinisindicLogo from "@/app/icons/QuinisindicLogo";
 import {
   Navbar,
@@ -17,6 +18,7 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 export default function Header() {
@@ -28,17 +30,18 @@ export default function Header() {
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isSticky, setIsSticky] = React.useState<"sticky" | "static">("sticky");
-  // const [shouldHide, setShouldHide] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    // Solo aplica el comportamiento en pantallas pequeñas (por ejemplo, menos de 526px)
     if (window.innerWidth < 526) {
       setIsSticky("static");
-      // setShouldHide(true);
-    } else {
-      // setShouldHide(false);
     }
   }, []);
+
+  const handleMenuItemClick = (path: string) => {
+    setIsMenuOpen(false); // Cierra el menú
+    setTimeout(() => router.push(path), 0); // Navega después del cierre del menú
+  };
 
   return (
     <Navbar
@@ -46,10 +49,10 @@ export default function Header() {
       maxWidth="full"
       position={isSticky}
       isBlurred={false}
+      isMenuOpen={isMenuOpen} // Enlazamos el estado manualmente
       className="mb-4"
-      // shouldHideOnScroll={shouldHide}
     >
-      {/* Toogle icon */}
+      {/* Toggle icon */}
       <NavbarMenuToggle
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
         className="sm:hidden text-foreground"
@@ -71,25 +74,35 @@ export default function Header() {
         </NavbarBrand>
       </NavbarContent>
 
-      {/* Menu en mobile*/}
+      {/* Menu en mobile */}
       <NavbarMenu className="flex flex-col gap-4 items-center">
         {menuItems.map((item) => (
           <NavbarMenuItem key={item.path}>
-            <Link href={item.path}>{item.name}</Link>
+            <button
+              onClick={() => handleMenuItemClick(item.path)}
+              className="text-inherit"
+            >
+              {item.name}
+            </button>
           </NavbarMenuItem>
         ))}
       </NavbarMenu>
 
       {/* Avatar */}
       <NavbarContent as="div" justify="end">
-        {/* Menu en desktop*/}
+        {/* Menu en desktop */}
         <NavbarContent
           className="hidden sm:flex gap-4 text-foreground"
           justify="end"
         >
           {menuItems.map((item) => (
             <NavbarItem key={item.path}>
-              <Link href={item.path}>{item.name}</Link>
+              <button
+                onClick={() => handleMenuItemClick(item.path)}
+                className="text-inherit"
+              >
+                {item.name}
+              </button>
             </NavbarItem>
           ))}
         </NavbarContent>

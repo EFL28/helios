@@ -21,6 +21,10 @@ const config: Config = {
         secondary: "var(--secondary)",
         focus: "var(--focus)",
       },
+      // container: {
+      //   center: true,
+      //   padding: '1rem',
+      // },
     },
   },
   darkMode: "class",
