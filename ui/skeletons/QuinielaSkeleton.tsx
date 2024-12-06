@@ -11,16 +11,13 @@ export default function QuinielaSkeleton() {
       <div className="grid gap-4">
         {/* Primeros 14 partidos normales */}
         {[...Array(14)].map((_, index) => (
-          <div
-            key={index}
-            className="bg-primary rounded-lg shadow p-4"
-          >
+          <div key={index} className="bg-primary rounded-lg shadow p-4">
             <div className="flex items-center justify-between">
               {/* Equipo Local */}
               <div className="w-1/3 text-right pr-4">
                 <div className="h-4 bg-gray-200 w-24 ml-auto rounded"></div>
               </div>
-              
+
               {/* Botones 1-X-2 */}
               <div className="flex gap-2 justify-center min-w-[120px]">
                 {[...Array(3)].map((_, i) => (
@@ -51,13 +48,19 @@ export default function QuinielaSkeleton() {
             <div className="flex justify-center gap-4">
               <div className="flex gap-1">
                 {[...Array(4)].map((_, i) => (
-                  <div key={`local-${i}`} className="w-8 h-8 rounded-full bg-gray-200"></div>
+                  <div
+                    key={`local-${i}`}
+                    className="w-8 h-8 rounded-full bg-gray-200"
+                  ></div>
                 ))}
               </div>
               <div className="border-l border-gray-300 mx-1"></div>
               <div className="flex gap-1">
                 {[...Array(4)].map((_, i) => (
-                  <div key={`visitante-${i}`} className="w-8 h-8 rounded-full bg-gray-200"></div>
+                  <div
+                    key={`visitante-${i}`}
+                    className="w-8 h-8 rounded-full bg-gray-200"
+                  ></div>
                 ))}
               </div>
             </div>

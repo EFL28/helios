@@ -2,6 +2,7 @@
 
 import { NextUIProvider } from "@nextui-org/react";
 import type { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 import { useEffect, useState } from "react";
 import "./globals.css";
 import LayoutBody from "./layout-body";
@@ -39,9 +40,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={isDarkMode ? "dark" : ""}>
       <body>
-        <NextUIProvider>
-          <LayoutBody>{children}</LayoutBody>
-        </NextUIProvider>
+        <SessionProvider>
+          <NextUIProvider>
+            <LayoutBody>{children}</LayoutBody>
+          </NextUIProvider>
+        </SessionProvider>
       </body>
     </html>
   );

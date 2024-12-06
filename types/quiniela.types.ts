@@ -1,5 +1,4 @@
-
-export interface QuinielaData {
+export interface QuinielaResponse {
   fecha_sorteo: string; //'2024-09-01 23:28:00',
   dia_semana: string; // 'domingo',
   id_sorteo: string; // '1248206046',
@@ -46,4 +45,14 @@ export interface QuinielaEscrutinioElige8 {
   categoria: number; // 1;
   premio: string; //"811,53";
   ganadores: string; //"56";
+}
+
+export interface QuinielaWithCrests extends QuinielaPartido {
+  local_crest: string | undefined;
+  visitante_crest: string | undefined;
+}
+
+export interface Quiniela {
+  jornada: string;
+  partidos: QuinielaWithCrests[];
 }

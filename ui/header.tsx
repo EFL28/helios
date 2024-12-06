@@ -17,16 +17,20 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 export default function Header() {
+  const { data: session } = useSession();
   const menuItems = [
     { name: "Predicciones", path: "/predictions" },
     { name: "Resultados", path: "/results" },
     { name: "Quiniela", path: "/quiniela" },
   ];
+
+  console.log("session", session);
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isSticky, setIsSticky] = React.useState<"sticky" | "static">("sticky");

@@ -1,12 +1,13 @@
 "use client";
 
-import { QuinielaPartido } from "@/types/quiniela.types";
+import { QuinielaWithCrests } from "@/types/quiniela.types";
 import QuinielaSkeleton from "@/ui/skeletons/QuinielaSkeleton";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Quiniela() {
   const [isLoading, setIsLoading] = useState(true);
-  const [partidos, setPartidos] = useState<QuinielaPartido[]>([]);
+  const [partidos, setPartidos] = useState<QuinielaWithCrests[]>([]);
   const [jornada, setJornada] = useState<string | null>(null);
   const [predicciones, setPredicciones] = useState<{
     [key: number]: { local?: string; visitante?: string } | string;
@@ -21,8 +22,10 @@ export default function Quiniela() {
         const res = await fetch(endpoint);
         const data = await res.json();
 
-        const partidos: QuinielaPartido[] = data.data.partidos;
-        const jornada: string = data.data.jornada;
+        console.log(data);
+
+        const partidos: QuinielaWithCrests[] = data.partidos;
+        const jornada: string = data.jornada;
 
         setPartidos(partidos);
         setJornada(jornada);
@@ -64,33 +67,79 @@ export default function Quiniela() {
   };
 
   const renderPrediccionNormal = (index: number) => (
-    <div className="flex gap-2 justify-center min-w-[120px]">
-      {["1", "X", "2"].map((opcion) => (
-        <button
-          key={opcion}
-          onClick={() => handlePrediccion(index, opcion)}
-          className={`w-8 h-8 rounded-full border ${
-            predicciones[index] === opcion
-              ? "bg-secondary text-white"
-              : "bg-foreground-50 hover:bg-secondary"
-          }`}
-        >
-          {opcion}
-        </button>
-      ))}
+    <div className="flex items-center justify-between w-full">
+      <div className="flex items-center justify-end gap-2 w-1/3">
+        <span className="text-right">{partidos[index].local}</span>
+        <Image
+          src={partidos[index].local_crest as string}
+          alt={partidos[index].local}
+          width={32}
+          height={32}
+          className="object-contain"
+        />
+      </div>
+
+      <div className="flex gap-2 justify-center min-w-[120px]">
+        {["1", "X", "2"].map((opcion) => (
+          <button
+            key={opcion}
+            onClick={() => handlePrediccion(index, opcion)}
+            className={`w-8 h-8 rounded-full border ${
+              predicciones[index] === opcion
+                ? "bg-secondary text-white"
+                : "bg-foreground-50 hover:bg-secondary"
+            }`}
+          >
+            {opcion}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex items-center justify-start gap-2 w-1/3">
+        <Image
+          src={partidos[index].visitante_crest as string}
+          alt={partidos[index].visitante}
+          width={32}
+          height={32}
+          className="object-contain"
+        />
+        <span className="text-left">{partidos[index].visitante}</span>
+      </div>
     </div>
   );
 
-  const renderPrediccionGoles = (index: number, partido: QuinielaPartido) => {
+  const renderPrediccionGoles = (
+    index: number,
+    partido: QuinielaWithCrests
+  ) => {
     const prediccion =
       (predicciones[index] as { local?: string; visitante?: string }) || {};
 
     return (
-      <div className="flex flex-col items-center w-full gap-2">
-        <div className="flex justify-center gap-8 w-full">
-          <span className="text-center">{partido.local}</span>
-          <span className="text-center">{partido.visitante}</span>
+      <div className="flex flex-col items-center w-full gap-4">
+        <div className="flex justify-center items-center gap-8 w-full">
+          <div className="flex items-center gap-2">
+            <span className="text-right">{partido.local}</span>
+            <Image
+              src={partido.local_crest as string}
+              alt={partido.local}
+              width={32}
+              height={32}
+              className="object-contain"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Image
+              src={partido.visitante_crest as string}
+              alt={partido.visitante}
+              width={32}
+              height={32}
+              className="object-contain"
+            />
+            <span className="text-left">{partido.visitante}</span>
+          </div>
         </div>
+
         <div className="flex justify-center gap-4">
           <div className="flex gap-1">
             {["0", "1", "2", "M"].map((gol) => (
@@ -141,11 +190,7 @@ export default function Quiniela() {
           >
             {index < 14 ? (
               <div className="flex items-center justify-between">
-                <div className="w-1/3 text-right pr-4">{partido.local}</div>
-                <div className="flex justify-center">
-                  {renderPrediccionNormal(index)}
-                </div>
-                <div className="w-1/3 text-left pl-4">{partido.visitante}</div>
+                {renderPrediccionNormal(index)}
               </div>
             ) : (
               renderPrediccionGoles(index, partido)
