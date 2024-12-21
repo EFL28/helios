@@ -6,10 +6,10 @@ import React from "react";
 
 const LayoutBody: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
-  
-  // Lista de rutas donde no queremos aplicar el layout
-  const excludedPaths = ['/login'];
-  
+
+  // lista de rutas donde no aplicar el layout
+  const excludedPaths = ["/login", "/signup"];
+
   // Si estamos en la página de login, solo renderizar el contenido sin layout
   if (excludedPaths.includes(pathname)) {
     return <>{children}</>;

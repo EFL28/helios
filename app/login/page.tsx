@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import AppleIcon from "../icons/AppleIcon";
 import GoogleIcon from "../icons/GoogleIcon";
+import Link from "next/link";
 // import { FcGoogle } from 'react-icons/fc';
 // import { FaApple } from 'react-icons/fa';
 
@@ -88,6 +89,16 @@ export default function Login() {
           >
             Iniciar sesión
           </button>
+
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+            ¿No tienes cuenta?{" "}
+            <Link 
+              href="/signup" 
+              className="font-medium text-secondary hover:text-secondary/80 transition-colors duration-200"
+            >
+              Regístrate aquí
+            </Link>
+          </p>
         </form>
       </div>
     </div>
