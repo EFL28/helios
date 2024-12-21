@@ -1,10 +1,11 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 import { useState } from "react";
 import AppleIcon from "../icons/AppleIcon";
 import GoogleIcon from "../icons/GoogleIcon";
-import Link from "next/link";
+import QuinisindicLogo from "../icons/QuinisindicLogo";
 // import { FcGoogle } from 'react-icons/fc';
 // import { FaApple } from 'react-icons/fa';
 
@@ -25,6 +26,9 @@ export default function Login() {
     <div className="h-screen flex items-center justify-center bg-white dark:bg-[#272727]">
       <div className="max-w-md w-full space-y-4 p-8 bg-white dark:bg-[#272727] rounded-lg g my-8">
         <div className="text-center">
+          <Link href="/" className="inline-block">
+            <QuinisindicLogo className="h-24 w-auto mx-auto" />
+          </Link>
           <h2 className="text-3xl font-bold text-secondary">Iniciar sesión</h2>
         </div>
 
@@ -92,8 +96,8 @@ export default function Login() {
 
           <p className="text-center text-sm text-gray-600 dark:text-gray-400">
             ¿No tienes cuenta?{" "}
-            <Link 
-              href="/signup" 
+            <Link
+              href="/signup"
               className="font-medium text-secondary hover:text-secondary/80 transition-colors duration-200"
             >
               Regístrate aquí
